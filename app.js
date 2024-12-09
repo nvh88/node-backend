@@ -1,11 +1,5 @@
 const express = require("express");
 const app = express();
-
-// Serve a simple HTML page
-app.get("/", (req, res) => {
-  res.send("<h1>Hello, World!</h1>");
-});
-
 const fs = require("fs");
 const path = require("path");
 const bodyParser = require("body-parser");
@@ -27,6 +21,11 @@ app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Methods", "GET, POST, PATCH, DELETE");
 
   next();
+});
+
+// Serve a simple HTML page
+app.get("/", (req, res) => {
+  res.send("<h1>Title!</h1>");
 });
 
 module.exports = app;
