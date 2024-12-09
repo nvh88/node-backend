@@ -23,9 +23,41 @@ app.use((req, res, next) => {
   next();
 });
 
+app.use("/api/places", placesRoutes);
+app.use("/api/users", usersRoutes);
+
+app.use((req, res, next) => {
+  const error = new HttpError("Could not find this route.", 404);
+  throw error;
+});
+
+app.use((error, req, res, next) => {
+  if (req.file) {
+    fs.unlink(req.file.path, (err) => {
+      console.log(err);
+    });
+  }
+  if (res.headerSent) {
+    return next(error);
+  }
+  res.status(error.code || 500);
+  res.json({ message: error.message || "An unknown error occurred!" });
+});
+
+mongoose
+  .connect(
+    "mongodb+srv://niels88:K5E2fCTc7Day4zFMJuQ9Akvgbh@cluster0.t2idf.mongodb.net/places?retryWrites=true&w=majority&appName=Cluster0;"
+  )
+  .then(() => {
+    //app.listen(5000);
+  })
+  .catch((err) => {
+    console.log(err);
+  });
+
 // Serve a simple HTML page
 app.get("/", (req, res) => {
-  res.send("<h1>Title!</h1>");
+  res.send("<h1>Users!</h1>");
 });
 
 module.exports = app;
